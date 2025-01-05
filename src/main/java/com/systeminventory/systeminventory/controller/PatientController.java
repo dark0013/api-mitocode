@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 //import org.springframework.hateoas.EntityModel;
 import static org.springframework.http.HttpStatus.*;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +37,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+//import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+//import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 //import static org.springframework.hateoas.EntityModel.of;
 //import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 //import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 /**
  *
  * @author Alain
@@ -86,6 +93,16 @@ public class PatientController {
         return new ResponseEntity<>(convertToDto(obj), OK);
     }
 
+    //no lo eh probado
+    @GetMapping("/hateoas/{id}")
+    public EntityModel<PatientDto> finModelHateoas(@PathVariable("id") Integer id) {
+        Patient obj = servi.findbyId(id);
+        EntityModel<PatientDto> resource = EntityModel.of(mapper.map(obj, PatientDto.class));
+        WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
+        resource.add(link1.withRel("patient-info1"));
+        return resource;
+    }
+
 //    @GetMapping("/hateoas/{id}")
 //    public EntityModel<PatientDto> findByIdHateoas(@PathVariable("id") Integer id) {
 //        Patient obj = servi.findbyId(id);
@@ -95,8 +112,6 @@ public class PatientController {
 //        resource.add(link1.withRel("patient-info1"));
 //        return resource;
 //    }
-    
-    
 //    @PostMapping
 //    public ResponseEntity<Patient> save(@RequestBody Patient patient) {
 //        return new ResponseEntity<>(servi.save(patient), CREATED);
