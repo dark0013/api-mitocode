@@ -20,5 +20,5 @@ public class Specialty {
     @Column(nullable = false,length = 100)
     private String Name;
     @Column(nullable = false,length = 150)
-    private String desceiption;
+    private String description;
 }
