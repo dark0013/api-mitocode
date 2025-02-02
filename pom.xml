@@ -8,10 +8,10 @@
         <version>3.0.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.systeminventory</groupId>
-    <artifactId>systeminventory</artifactId>
+    <groupId>com.systemMedic</groupId>
+    <artifactId>systemMedic</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>systeminventory</name>
+    <name>systemMedic</name>
     <description>back end del sistema de inventario</description>
     <url/>
     <licenses>
