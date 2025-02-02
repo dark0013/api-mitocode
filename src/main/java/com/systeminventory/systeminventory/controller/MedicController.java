@@ -5,11 +5,11 @@
  */
 package com.systeminventory.systeminventory.controller;
 
-import com.systeminventory.systeminventory.dto.ExamDto;
-import com.systeminventory.systeminventory.model.Exam;
 
-//import com.systeminventory.systeminventory.services.PatientServiceImpl;
-import com.systeminventory.systeminventory.services.impl.ExamServiceImpl;
+import com.systeminventory.systeminventory.dto.MedicDto;
+import com.systeminventory.systeminventory.model.Medic;
+
+import com.systeminventory.systeminventory.services.impl.MedicServiceImpl;
 import jakarta.validation.Valid;
 
 import java.net.URI;
@@ -41,52 +41,55 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * @author Alain
  */
 @RestController
-@RequestMapping("/exam")
+@RequestMapping("/medic")
 @RequiredArgsConstructor
-public class ExamController {
+public class MedicController {
 
 //    private final PatientServicesImpl servi;
-    private final ExamServiceImpl servi;
-    @Qualifier("DefaultMapper")
+    private final MedicServiceImpl servi;
+  
+    @Qualifier("medicMapper")
     private final ModelMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<ExamDto>> findAll() {
+    public ResponseEntity<List<MedicDto>> findAll() {
 
-        List<ExamDto> list = servi.findAll()
+        List<MedicDto> list = servi.findAll()
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(list, OK);
     }
 
+    
     @GetMapping("/{id}")
-    public ResponseEntity<ExamDto> findById(@PathVariable("id") Integer id) {
-        Exam obj = servi.findbyId(id);
+    public ResponseEntity<MedicDto> findById(@PathVariable("id") Integer id) {
+        Medic obj = servi.findbyId(id);
         return new ResponseEntity<>(convertToDto(obj), OK);
     }
 
     //no lo eh probado
     @GetMapping("/hateoas/{id}")
-    public EntityModel<ExamDto> finModelHateoas(@PathVariable("id") Integer id) {
-        Exam obj = servi.findbyId(id);
-        EntityModel<ExamDto> resource = EntityModel.of(mapper.map(obj, ExamDto.class));
+    public EntityModel<MedicDto> finModelHateoas(@PathVariable("id") Integer id) {
+        Medic obj = servi.findbyId(id);
+        EntityModel<MedicDto> resource = EntityModel.of(mapper.map(obj, MedicDto.class));
         WebMvcLinkBuilder link1 = linkTo(methodOn(this.getClass()).findById(id));
         resource.add(link1.withRel("patient-info1"));
         return resource;
     }
 
+
     @PostMapping
-    public ResponseEntity<Void> save(@Valid @RequestBody ExamDto patient) {
-        Exam obj = servi.save(convertToEntity(patient));
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdExam()).toUri();
+    public ResponseEntity<Void> save(@Valid @RequestBody MedicDto patient) {
+        Medic obj = servi.save(convertToEntity(patient));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdMedic()).toUri();
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExamDto> update(@PathVariable("id") Integer id, @Valid @RequestBody ExamDto patient) {
-        patient.setIdExam(id);
-        Exam obj = servi.update(convertToEntity(patient), id);
+    public ResponseEntity<MedicDto> update(@PathVariable("id") Integer id, @Valid @RequestBody MedicDto patient) {
+        patient.setIdMedic(id);
+        Medic obj = servi.update(convertToEntity(patient), id);
         return new ResponseEntity<>(convertToDto(obj), OK);
     }
 
@@ -96,12 +99,12 @@ public class ExamController {
         return new ResponseEntity<>(NO_CONTENT);
     }
 
-    private ExamDto convertToDto(Exam obj) {
-        return mapper.map(obj, ExamDto.class);
+    private MedicDto convertToDto(Medic obj) {
+        return mapper.map(obj, MedicDto.class);
     }
 
-    private Exam convertToEntity(ExamDto dto) {
-        return mapper.map(dto, Exam.class);
+    private Medic convertToEntity(MedicDto dto) {
+        return mapper.map(dto, Medic.class);
     }
 
 }

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 //import org.springframework.hateoas.EntityModel;
@@ -58,6 +59,7 @@ public class PatientController {
 
 //    private final PatientServicesImpl servi;
     private final PatientServiceImpl servi;
+    @Qualifier("DefaultMapper")
     private final ModelMapper mapper;
 
     @GetMapping

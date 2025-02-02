@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 //import org.springframework.hateoas.EntityModel;
@@ -61,6 +62,7 @@ public class SpecialtyController {
 
 //    private final PatientServicesImpl servi;
     private final SpecialtyServiceImpl servi;
+    @Qualifier("DefaultMapper")
     private final ModelMapper mapper;
 
     @GetMapping
@@ -73,7 +75,6 @@ public class SpecialtyController {
         return new ResponseEntity<>(list, OK);
     }
 
-    
     @GetMapping("/{id}")
     public ResponseEntity<SpecialtyDto> findById(@PathVariable("id") Integer id) {
         Specialty obj = servi.findbyId(id);
@@ -89,7 +90,6 @@ public class SpecialtyController {
         resource.add(link1.withRel("patient-info1"));
         return resource;
     }
-
 
     @PostMapping
     public ResponseEntity<Void> save(@Valid @RequestBody SpecialtyDto patient) {
